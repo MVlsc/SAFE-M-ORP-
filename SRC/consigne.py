@@ -86,11 +86,14 @@ while continuer :
         reponse_calibration = input(menu_calibration)
         if reponse_calibration == '1' :
            cal.enregistrement_cal(C0,nb_etalons=2)
+
         if reponse_calibration == '2' :
            cal.enregistrement_cal2_png(fig)
+
         elif reponse_calibration == '3' :
-           cal.enregistrement_cal(C0,nb_etalons=2)
+           cal.enregistrement_cal(C0,tendance=tendance,nb_etalons=2)
            cal.enregistrement_cal2_png(fig)
+
         else : 
            print('Aucune donnée de calibration sauvegardée.')
 

@@ -8,6 +8,8 @@ from pathlib import Path
 import serial
 import time
 import matplotlib.pyplot as plt
+import scipy.stats as stats
+
 #calibration d'usine : 
 def calibration_usine():
     """_summary_
@@ -80,18 +82,24 @@ def V_real_f (V,C0):
 #=======================================================
 #Enregistrement des données de calibration :
 
-def enregistrement_cal (figure,C0,nb_etalons=None) :
+def enregistrement_cal (C0, tendance = None,nb_etalons=None) :
     BASE = Path(__file__).parent.parent
-    chemin = BASE/"Data"/'data_figures'/nom_fichier      
+    chemin = BASE/"Data"/'données calibration'/nom_fichier      
     now = datetime.datetime.now()
     if nb_etalons is 1:
         nom_fichier = now.strftime(f"Calibration à {cal} étalons %d %B, %Hh%M.csv")
     elif nb_etalons is 2:
         nom_fichier = now.strftime(f"Calibration à {cal} étalons %d %B, %Hh%M.csv")
     chemin = BASE/"Data"/"données calibration"/nom_fichier      
-    resultat = np.atleast_2d(C0) #  garantit un array 2D pour savetxt
-    with open(chemin, 'w', newline='', encoding='utf-8') as f:  #encodage explicite
-        np.savetxt(f, resultat, fmt='%.2f', header=f"Donnees Calibration de la solution {a} (=Co)") 
+    if tendance is None :
+        resultat = np.atleast_2d(C0) #  garantit un array 2D pour savetxt
+        with open(chemin, 'w', newline='', encoding='utf-8') as f:  #encodage explicite
+            np.savetxt(f, resultat, fmt='%.2f', header=f"Donnees Calibration à {nb_etalons} étalons(Co,tendance)") 
+    else : 
+        slope, intercept = tendance.coeffs
+        resultat = np.atleast_2d([C0, slope, intercept]) #  array 2D avec C0, slope et intercept
+        with open(chemin, 'w', newline='', encoding='utf-8') as f:  #encodage explicite
+            np.savetxt(f, resultat, fmt='%.2f', header=f"Donnees Calibration à {nb_etalons},tendance : E = {slope:.2f}*V + {intercept:.2f}") 
 
 def enregistrement_cal2_png (figure,C0) :
     BASE = Path(__file__).parent.parent
@@ -100,7 +108,6 @@ def enregistrement_cal2_png (figure,C0) :
     chemin = BASE/"Data"/'data_figures'/'data_figures_calibration'/nom_fichier      
     figure.savefig(chemin,bbox_inches='tight')
     return 'Le fichier png a bien été enregistré.'
-    return 'Le fichier csv a bien été enregistré.'
 # =======================================================================================================
 # Calibration à 2 étalons :
 
