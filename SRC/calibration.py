@@ -52,11 +52,14 @@ def calibration_etalon(V):
         C.append(X)
     C0 = np.mean(C)
     return C0
+# s, portIN = mes.connexion_port()
+# _,V = mes.data(s)
+# calibration_etalon(V)
 
      
 #if __name__ == '__main__':
-    T,V = data()
-    print(calibration_etalon(V))
+    # T,V = data()
+    # print(calibration_etalon(V))
 
 
 
@@ -86,9 +89,9 @@ def enregistrement_cal (C0, tendance = None,nb_etalons=None) :
     BASE = Path(__file__).parent.parent
     chemin = BASE/"Data"/'données calibration'/nom_fichier      
     now = datetime.datetime.now()
-    if nb_etalons is 1:
+    if nb_etalons == 1:
         nom_fichier = now.strftime(f"Calibration à {cal} étalons %d %B, %Hh%M.csv")
-    elif nb_etalons is 2:
+    elif nb_etalons == 2:
         nom_fichier = now.strftime(f"Calibration à {cal} étalons %d %B, %Hh%M.csv")
     chemin = BASE/"Data"/"données calibration"/nom_fichier      
     if tendance is None :
@@ -120,7 +123,7 @@ def calibration_2_etalons(s, E1=None, E2=None,V1=None, V2=None) :
         T, V1 = mes.data(s, N=100)
     if E2 is None and V2 is None:
         E2 = float(input('Potentiel de la solution étalon 2 (mV) : '))
-        print('Nettoyer et sécher votre sonde, puis la placer dans la solution étalon 2','/!\ vous avez 1 min')
+        print('Nettoyer et sécher votre sonde, puis la placer dans la solution étalon 2 , /!\ vous avez 1 min')
         time.sleep(60)
         print('Début des mesures...')
         T, V2 = mes.data(s, N=100)

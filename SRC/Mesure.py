@@ -198,7 +198,7 @@ def enregistrement_png (figure) :
     BASE = Path(__file__).parent.parent
     now = datetime.datetime.now()
     nom_fichier = now.strftime("Graphique Température et Potentiel %d %B, %Hh%M.png")
-    chemin = BASE/"Data"/'data_figures'/nom_fichier      
+    chemin = BASE/"Data"/'data_figures'/'data_figures_mesures'/nom_fichier      
     figure.savefig(chemin,bbox_inches='tight')
     return 'Le fichier png a bien été enregistré.'
 
