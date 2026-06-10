@@ -25,7 +25,7 @@ def connexion_port(br=115200, portIN=''):
     for port in ports:
         p = str(port)
         # Windows
-        if 'Périphérique série' in p or 'série USB' in p or 'Arduino' in p:
+        if 'Arduino' in p or'Périphérique série' in p or 'série USB' in p :
             portIN = port.device
             break
         # Linux
@@ -148,6 +148,24 @@ def graphe_live(C0,s):
 
     return T, V,fig
 
+def informations_1er_ordre (T,V,a) :
+    """_summary_
+    Calcule et affiche les statistiques de base d'une session de mesures : moyenne et écart-type
+    des tensions calibrées et des températures mesurées. Affiche les résultats dans la console.
+
+    Args:
+        T (list[float]): Liste des températures mesurées (en °C).
+        V (list[float]): Liste des tensions calibrées (en mV).
+    """
+    moy_V = np.mean(V[int(a):])
+    sigma = np.std(V[int(a):])
+    moy_T = np.mean(T[int(a):])
+    print(f"moyenne Potentiel(mV) = {moy_V}")
+    print(f'écart type (écart-type) = {sigma}')
+    print(f'moyenne Température (°C)={moy_T}')
+    return moy_T , moy_V, sigma 
+
+
 
 def data_live(s): 
     """_summary_
@@ -202,4 +220,6 @@ def enregistrement_png (figure) :
     figure.savefig(chemin,bbox_inches='tight')
     return 'Le fichier png a bien été enregistré.'
 
-connexion_port(br= 115200 , portIN ='')
+# portIN,s = connexion_port(br= 115200 , portIN ='')
+
+# print(s)
