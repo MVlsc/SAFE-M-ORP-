@@ -1,14 +1,3 @@
-# D = solution calibré (470 mV):
-mesureD1 = [425,436.69,450.84,449.65,449.69,454.58,423.68,439.19,440]
-mesureD2 =[394.3 ,427.8,447.4,440,443,444,442, 43,437  ]
-sigmaD1 = [7,5.74,6.15,3.21,2.64,6.08,2.17 , 4.52,4.52]
-sigmaD2 =[5.5,4.8,4.85,3.44,6.7,6.52, 5.3, 6.76   ,5.77]
+import threading 
+import time
 
-# Eb = eau déminéralisée tester avec D
-mesureEb1= [159.5 ,185.8,236.8,266.17,238.27,184.1,233 , 429.5  ,246.9]
-mesureEb2= [360.42, 370.36,375.9,385.4,414.1,391.7, 359.21 , 466  ,384.4]
-sigmaEb1 = [13.05 ,13.55,5.96,5.4,4.27,5.9,7.31   ,5.58    ,5.61  ]
-sigmaEb2 =[15,8.6,4,6.81,5.57,5.4,3.08  ,5.5 ,5.84]
-
-print(len(mesureEb1), len(mesureEb2), len(sigmaEb1), len(sigmaEb2))
-print(len(mesureD1), len(mesureD2), len(sigmaD1), len(sigmaD2))

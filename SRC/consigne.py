@@ -108,15 +108,6 @@ while continuer :
                     cal.enregistrement_cal2_png(fig)
          
 
-   elif reponse == '2':
-    T, V = mes.data(s)
-    C0,V1_moy, V2_moy, tendance,r_squared = cal.calibration_etalon(s, E1=None,E2=None, V1=None, V2=None)
-    fig = cal.graphe_cal2(V1_moy, V2_moy, tendance, r_squared, E1=None, E2=None)
-    print("Voici le terme correctif : %4.2f" % (C0))
-    V_real = cal.V_real_f(V, C0)
-    print('La nouvelle tension mesurée est contenue dans la liste "V_real" et les données de calibration sont sauvegardées automatiquement au nom de la solution')
-    cal.enregistrement_cal(C0,nb_etalons=1)
-
    elif reponse == '2' :      
        """_summary_
                Sous-option 3-1-1/2/3 — Sauvegarde des données Potentiel et / ou température
@@ -147,7 +138,7 @@ while continuer :
            
    elif reponse == '3':
        print(indication_live)
-       time.sleep(10)
+       time.sleep(2)
        T ,V,fig = mes.graphe_live(C0,s)
        
        reponse_live = input(menu_live) 

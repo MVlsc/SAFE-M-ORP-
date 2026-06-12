@@ -98,55 +98,66 @@ def Graphe_T_V(x,y):
     return fig 
 
 
-def graphe_live(C0,s):
-    """ _summary_
-    Acquiert et affiche en temps d'acquisition la tension et la température via le port série,
-    jusqu'à ce que l'utilisateur appuie sur 'q'. Utilise deux sous-graphiques superposés
-    (tension en haut, température en bas) mis à jour dynamiquement à chaque nouvelle mesure.
-    Ferme la fenêtre graphique automatiquement à l'arrêt.
 
-    Returns:
-        [list[float], list[float]]:
-            - T : liste des températures acquises pendant la session (en °C).
-            - V : liste des tensions acquises pendant la session (en mV).
-    """
+
+import threading
+
+import matplotlib.pyplot as plt
+import time
+
+def graphe_live(C0, s):
     T = []
     V = []
-    t = 0
+    stop = False
 
-    plt.ion() 
-    fig, (ax1 , ax2)  = plt.subplots(2,1)
+    def on_key(event):
+        nonlocal stop
+        if event.key == 'q':
+            stop = True
 
-    print("Mesure en cours... Appuie sur Q pour arrêter")
-    while True : 
-        if keyboard.is_pressed('q'):
-            plt.close(fig)
-            break 
+    plt.ion()
+    fig, (ax1, ax2) = plt.subplots(2, 1)
+    fig.canvas.mpl_connect('key_press_event', on_key)
+
+    print("Mesure en cours... Appuie sur 'q' dans la fenêtre du graphe pour arrêter.")
+
+    while not stop:
         s.flushInput()
-        time.sleep(0.1)
+        time.sleep(0.5)  # ~ 2 mesures / seconde
+
         try:
             line = s.readline().decode()
             a = line.strip("\r\n").split(",")
+
             v_cal = (2 - float(a[0])) * 1000 + C0
+            print(v_cal)
+
             T.append(float(a[1]))
-            V.append(v_cal)
-            t = t + 0.1
+            if 10 < v_cal < 700:
+                V.append(v_cal)
 
-            ax1.clear() #ax.clear() efface tt ce qu'il y a dans le graphe 
+            ax1.clear()
             ax1.plot(V, color='blue')
-            ax1.set_xlabel("Temps d'acquisition (u.a)")
-            ax1.set_ylabel("Tension calibré (mV)")
+            ax1.set_title("Tension")
+            ax1.set_xlabel("Temps d'acquisition (u.a.)")
+            ax1.set_ylabel("Tension calibrée (mV)")
 
-            ax2.clear() #ax.clear() efface tt ce qu'il y a dans le graphe 
-            ax2.plot(T, color='blue')
-            ax2.set_xlabel("Temps d'acquisition (u.a)")
-            ax2.set_ylabel("Température(T)")
-            plt.pause(0.2)
-            
-        except:
-            print("problème de lecture de données")
+            ax2.clear()
+            ax2.plot(T, color='red')
+            ax2.set_title("Température")
+            ax2.set_xlabel("Temps d'acquisition (u.a.)")
+            ax2.set_ylabel("Température (°C)")
 
-    return T, V,fig
+            plt.tight_layout()
+            plt.pause(0.01)
+
+        except Exception as e:
+            print(f"Problème de lecture des données : {e}")
+
+    plt.ioff()   # ← stop le mode interactif
+    plt.close(fig)
+
+    return T, V, fig
 
 def informations_1er_ordre (T,V,a) :
     """_summary_
@@ -221,5 +232,5 @@ def enregistrement_png (figure) :
     return 'Le fichier png a bien été enregistré.'
 
 # portIN,s = connexion_port(br= 115200 , portIN ='')
-
-# print(s)
+# C0 = 0
+# graphe_live(C0,s)
